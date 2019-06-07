@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9__(+e45th$5s0xue)rwktgk4a&#e34z4h2(&8$x6dk@i04j-n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get("APP_ENV") == "PRODUCTION":
+    DEBUG=False
+else: 
+    DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1",".pythonanywhere.com"]
 
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app'
 ]
 
 MIDDLEWARE = [
@@ -118,3 +123,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# enviroment
+BASE_DIR = environ.Path(__file__) -2
+env = environ.Env()
+env_file=str(BASE_DIR.path('.env'))
+env.read_env(env_file)
+
+FOURSQUARE_CLIENT = env('FOURSQUARE_CLIENT')
+FOURSQUARE_SECRET = env('FOURSQUARE_SECRET') 
+HOSTNAME = env('HOSTNAME')
